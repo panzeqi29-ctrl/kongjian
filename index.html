@@ -40,7 +40,6 @@
       pointer-events: none;
     }
 
-    /* 登录页 */
     .login-page {
       position: fixed;
       inset: 0;
@@ -105,7 +104,6 @@
       box-shadow: 0 10px 30px var(--accent-glow);
     }
 
-    /* 空间主页 */
     .space-page {
       position: relative;
       z-index: 1;
@@ -137,7 +135,6 @@
       backdrop-filter: blur(10px);
     }
 
-    /* 头像 */
     .avatar-container {
       position: relative;
       width: 120px;
@@ -200,7 +197,6 @@
       opacity: 1;
     }
 
-    /* 动态卡片 */
     .moment-card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -230,7 +226,6 @@
 
     .moment-input:focus { border-color: var(--accent); }
 
-    /* 标签页 */
     .tab-btn {
       padding: 12px 24px;
       background: transparent;
@@ -259,7 +254,6 @@
     .tab-btn.active::after { width: 60%; }
     .tab-btn:hover { color: var(--fg); }
 
-    /* 好友 */
     .friend-item {
       display: flex;
       align-items: center;
@@ -297,7 +291,6 @@
       50% { opacity: 0.5; }
     }
 
-    /* 相册 */
     .photo-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -344,7 +337,6 @@
       opacity: 1;
     }
 
-    /* 留言 */
     .message-item {
       position: relative;
       padding: 20px;
@@ -378,7 +370,6 @@
       color: var(--love);
     }
 
-    /* 删除按钮 */
     .delete-btn {
       background: transparent;
       border: none;
@@ -397,7 +388,6 @@
       background: rgba(239, 68, 68, 0.1);
     }
 
-    /* 上传按钮 */
     .upload-btn {
       display: flex;
       align-items: center;
@@ -417,7 +407,6 @@
       box-shadow: 0 8px 20px var(--accent-glow);
     }
 
-    /* 滚动条 */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 3px; }
@@ -447,7 +436,6 @@
 <body>
   <canvas class="bg-canvas" id="bgCanvas"></canvas>
 
-  <!-- 隐藏的文件上传输入 -->
   <input type="file" id="avatarInput" accept="image/*" style="display:none">
   <input type="file" id="photoInput" accept="image/*" multiple style="display:none">
 
@@ -471,14 +459,10 @@
         </div>
 
         <div id="loginError" class="text-sm hidden" style="color: var(--love);">
-          账号或密码不能为空
+          账号或密码错误
         </div>
 
         <button class="btn-primary mt-6" onclick="handleLogin()">登录空间</button>
-
-        <p class="text-center text-sm mt-4" style="color: var(--muted);">
-          提示：输入任意账号密码即可登录
-        </p>
       </div>
     </div>
   </div>
@@ -506,7 +490,6 @@
     <main class="max-w-7xl mx-auto px-4 py-6">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
-        <!-- 左侧 -->
         <aside class="lg:col-span-3 space-y-4">
           <div class="profile-card">
             <div class="h-32 bg-gradient-to-r from-amber-600 via-orange-500 to-yellow-500 relative">
@@ -548,7 +531,6 @@
             </div>
           </div>
 
-          <!-- 好友列表 -->
           <div class="profile-card p-4">
             <h3 class="font-bold mb-3 flex items-center gap-2">
               <span>好友</span>
@@ -558,7 +540,6 @@
           </div>
         </aside>
 
-        <!-- 中间 -->
         <section class="lg:col-span-6 space-y-4">
           <div class="profile-card">
             <div class="flex border-b" style="border-color: var(--border);">
@@ -568,7 +549,6 @@
             </div>
           </div>
 
-          <!-- 说说 -->
           <div id="momentsContent">
             <div class="moment-card">
               <textarea class="moment-input" id="newMoment" placeholder="这一刻的想法..."></textarea>
@@ -591,7 +571,6 @@
             <div class="space-y-4" id="momentsList"></div>
           </div>
 
-          <!-- 相册 -->
           <div id="photosContent" class="hidden">
             <div class="moment-card">
               <div class="flex items-center justify-between mb-4">
@@ -617,7 +596,6 @@
             </div>
           </div>
 
-          <!-- 留言板 -->
           <div id="messagesContent" class="hidden">
             <div class="moment-card mb-4">
               <textarea class="moment-input" id="newMessage" placeholder="给主人留言..."></textarea>
@@ -632,7 +610,6 @@
           </div>
         </section>
 
-        <!-- 右侧 -->
         <aside class="lg:col-span-3 space-y-4">
           <div class="profile-card p-4">
             <h3 class="font-bold mb-3">最近访客</h3>
@@ -661,10 +638,15 @@
   </div>
 
   <script>
+    // ========== 固定账号密码 ==========
+    const VALID_ACCOUNTS = {
+      'fengxueasd': { password: '123456', displayName: '风雪' },
+      '豆豆': { password: '123456', displayName: '豆豆' }
+    };
+
     // ========== 数据初始化 ==========
     const STORAGE_KEY = 'myspace_data';
     
-    // 默认数据
     const defaultData = {
       user: { name: '', avatar: '' },
       moments: [
@@ -692,7 +674,6 @@
       { name: '阿杰', time: '3小时前' },
     ];
 
-    // 加载数据
     function loadData() {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
@@ -705,7 +686,6 @@
       return { ...defaultData };
     }
 
-    // 保存数据
     function saveData() {
       const data = {
         user: currentUser,
@@ -795,23 +775,23 @@
       reader.readAsDataURL(file);
     }
 
-    // ========== 登录 ==========
+    // ========== 登录验证 ==========
     function handleLogin() {
       const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value;
       const errorEl = document.getElementById('loginError');
       
-      if (!username || !password) {
+      // 验证账号密码
+      if (!VALID_ACCOUNTS[username] || VALID_ACCOUNTS[username].password !== password) {
+        errorEl.textContent = '账号或密码错误';
         errorEl.classList.remove('hidden');
         return;
       }
       
       errorEl.classList.add('hidden');
       
-      // 更新或创建用户
-      if (!currentUser.name) {
-        currentUser.name = username;
-      }
+      // 设置用户信息
+      currentUser.name = VALID_ACCOUNTS[username].displayName;
       
       document.getElementById('displayName').textContent = currentUser.name;
       updateAvatar();
@@ -1132,15 +1112,6 @@
     document.getElementById('password').addEventListener('keypress', (e) => {
       if (e.key === 'Enter') handleLogin();
     });
-
-    // 检查是否已登录
-    if (currentUser.name) {
-      document.getElementById('displayName').textContent = currentUser.name;
-      updateAvatar();
-      document.getElementById('loginPage').classList.add('hidden');
-      document.getElementById('spacePage').classList.add('visible');
-      renderAll();
-    }
   </script>
 </body>
 </html>
